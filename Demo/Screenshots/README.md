@@ -14,7 +14,7 @@ gap is stated in the top-level `README.md` under **Verification status**.
 What *was* verified, on Linux with Swift 6.0.3:
 
 - `swift build` — clean
-- `swift test` — 76 tests, 0 failures
+- `swift test` — 80 tests, 0 failures
 
 `SpendGovernorUI` is guarded by `#if canImport(SwiftUI)`, so on Linux it compiles
 to an empty module. **It has never been compiled by anyone.** If you clone this
