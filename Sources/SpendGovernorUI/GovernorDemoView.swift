@@ -44,7 +44,7 @@ public struct GovernorDemoView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Same ceiling. Same requests.")
                 .font(.title2.bold())
-            Text("\(StandardScenario.requestCount) agent runs across 30 days against a \(StandardScenario.ceiling.description) ceiling, replayed under both policies from one seeded stream.")
+            Text("\(StandardScenario.requestCount) agent runs across 30 days against a \(StandardScenario.ceiling.description) ceiling, replayed under both policies from one seeded stream. Deferred runs are shelved, not retried.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
@@ -76,7 +76,7 @@ public struct GovernorDemoView: View {
             Text(delta >= 0 ? "Capacity model bought \(delta) more accepted outcomes (\(pct))"
                             : "Capacity model bought \(-delta) fewer accepted outcomes")
                 .font(.headline)
-            Text("Neither policy may exceed the ceiling. The difference is which requests got the money.")
+            Text("Both policies draw on the same ceiling — though a threshold that holds the caller's estimate and settles the real cost can overshoot it. The difference is which requests got the money.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
