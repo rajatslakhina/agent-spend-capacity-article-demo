@@ -4,7 +4,7 @@
 *when* to stop. It cannot tell you *what* to stop. This library is the part that
 decides what to stop.
 
-Companion code for the article: *(added after publish)*
+Companion code for a Medium article on capacity models for metered coding agents.
 
 ---
 
@@ -14,9 +14,9 @@ When an AI coding agent bills by the token, spend becomes an admission-control
 problem, not a procurement one. The unit worth budgeting is not the token — it is
 the **accepted outcome**: the change that survived review and got merged. A
 threshold policy is indifferent to that distinction, which is why it denies an
-incident hotfix and an exploratory refactor with equal enthusiasm on the 27th of
-the month. `SpendGovernor` admits work by reserve, pace and observed yield
-instead.
+incident hotfix and an exploratory refactor with equal enthusiasm — in this
+scenario, from day 15.2 onward. `SpendGovernor` admits work by reserve, pace and
+observed yield instead.
 
 ## What is in it
 
@@ -28,7 +28,7 @@ instead.
 | `ClassStats` | Evidence that survives the period boundary: spend, outcomes, estimate error. |
 | `AdmissionPolicy` | `AccessRestrictionPolicy` (cap, then stop) and `CapacityPolicy` (reserve · pace · yield). |
 | `Governor` | Actor shell. Serialises mutation so two concurrent runs cannot both be told there is room for one more. |
-| `PolicyHarness` / `StandardScenario` | Deterministic replay. Every number below comes from `swift test`. |
+| `PolicyHarness` / `StandardScenario` | Deterministic replay. Every *result* below is printed by `swift test`; the ceiling, request count and acceptance rates are constants in `StandardScenario`. |
 
 The load-bearing structural decision: **admission is a pure function of a
 snapshot, and the actor owns nothing but the snapshot.** A policy cannot await,
@@ -106,8 +106,9 @@ Two honest results:
   it back. One third of this design is inert in its own benchmark, and saying so
   is cheaper than having a reader find it.
 
-Reproduce all of it with `swift test` (the numbers are printed by
-`testPrintAblationForTheWriteUp`).
+Reproduce all of it with `swift test`: the policy comparison and leave-one-out
+are printed by `testPrintAblationForTheWriteUp`, and the day-of-month figures by
+`testPrintTimelineForTheWriteUp` in `TimelineTests`.
 
 ## How to run it
 
