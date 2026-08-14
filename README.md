@@ -66,12 +66,24 @@ settlements.
 | Policy | Accepted | Spent | Cost per accepted | Incidents denied |
 |---|---|---|---|---|
 | Access restriction, 85% cut-off | 98 | $1,028.13 | $10.49 | 44 |
-| Access restriction, no cut-off | 116 | $1,200.48 | $10.34 | 36 |
+| Access restriction, no cut-off | 116 | $1,200.48 \* | $10.34 | 36 |
 | **Capacity model** | **160** | **$1,039.58** | **$6.49** | **0** |
+
+\* Yes, that is past the $1,200 ceiling. A policy that holds the caller's
+estimate and settles the real cost does not actually cap anything —
+`CalibrationEffectTests` exists to pin that behaviour down.
 
 Against the *fairest* threshold policy — no early cut-off, spend until the
 ceiling is gone — the capacity model delivered **44 more accepted outcomes
-(+37.9%) on $160.90 less money**.
+(+37.9%)** and never refused an incident run. `TimelineTests` records when each
+policy starts saying no: the 85% cut-off refuses its first request on day 15.2
+and its first incident run on day 15.4; the capacity model never refuses an
+incident run at all.
+
+**The caveat that most affects those numbers:** `PolicyHarness` never retries a
+deferral. 82 requests were deferred under the capacity model and none came
+back, so its $1,039.58 is a floor, not a total. In a real system they retry,
+land later, and cost money.
 
 ### Leave-one-out, including the part that loses
 
@@ -91,7 +103,8 @@ Two honest results:
   reservation immediately, so holds never overlap and the held amount never
   binds. It earns its place only under concurrency — `CalibrationEffectTests`
   shows an uncalibrated cap overrunning its own ceiling and calibration pulling
-  it back.
+  it back. One third of this design is inert in its own benchmark, and saying so
+  is cheaper than having a reader find it.
 
 Reproduce all of it with `swift test` (the numbers are printed by
 `testPrintAblationForTheWriteUp`).
@@ -113,7 +126,7 @@ library through a local package reference at `.`. For the library alone,
 Stated plainly, because a demo that claims more than it did is worse than no demo.
 
 - ✅ `swift build` — clean, Swift 6.0.3 (Linux)
-- ✅ `swift test` — **76 tests, 0 failures**
+- ✅ `swift test` — **80 tests, 0 failures**
 - ✅ `Package.swift` declares library + test targets only. No `.executableTarget`
   — that pattern reliably crashes on launch with a nil bundle identifier.
 - ✅ `Demo.xcodeproj/project.pbxproj` hand-authored and structurally audited:
@@ -129,7 +142,10 @@ Stated plainly, because a demo that claims more than it did is worse than no dem
 
 The article this accompanies argues with, not against,
 [Gartner's 24 June 2026 press release on AI coding costs](https://www.gartner.com/en/newsroom/press-releases/2026-06-24-gartner-predicts-ai-coding-costs-will-surpass-average-developer-salary-by-2028-as-token-consumption-surges).
-Gartner's recommendation list opens with token thresholds; this library is a
-claim about what has to sit underneath one.
+Token thresholds are the fourth of Gartner's five recommendations, and their
+list actually opens by telling you to classify development work by execution
+model — which is closer to this library's argument than to a cap. But item four
+is the one that ships. This library is a claim about what has to sit underneath
+it.
 
 MIT licensed.
