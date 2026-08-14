@@ -3,8 +3,10 @@ import Foundation
 /// The scenario the article's numbers come from.
 ///
 /// Four classes with different economics, one month, one ceiling, one seeded
-/// request stream. Every figure quoted in the write-up is produced by calling
-/// `StandardScenario.compare()` — there are no hand-written numbers in the prose.
+/// request stream. `compare()` produces the head-to-head figures; the
+/// leave-one-out variants come from `AblationTests` and the day-of-month
+/// figures from `TimelineTests`. Nothing quoted in the write-up is invented —
+/// but three test files, not this one, produce it.
 public enum StandardScenario {
     public static let incident = WorkClass(
         id: "incident",

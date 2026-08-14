@@ -10,10 +10,10 @@ public protocol AdmissionPolicy: Sendable {
 /// Spend until a threshold, then stop everything.
 ///
 /// This is not a straw man — it is the shape of a monthly cap, a seat
-/// suspension, and a gateway spend limit. It is also the shape Gartner's own
-/// remediation list starts with ("token thresholds"). It has exactly one
-/// virtue: the bill stops. It has one structural flaw, which is the subject of
-/// this library: the threshold is indifferent to what the money was buying.
+/// suspension, and a gateway spend limit, and it is where most teams start.
+/// It has exactly one virtue: the bill stops. It has one structural flaw,
+/// which is the subject of this library: the threshold is indifferent to what
+/// the money was buying.
 public struct AccessRestrictionPolicy: AdmissionPolicy {
     public let name = "access-restriction"
     /// Fraction of the ceiling at which everything is cut off.
