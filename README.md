@@ -31,11 +31,13 @@ observed yield instead.
 | `PolicyHarness` / `StandardScenario` | Deterministic replay. Every *result* below is printed by `swift test`; the ceiling, request count and acceptance rates are constants in `StandardScenario`. |
 
 The load-bearing structural decision: **admission is a pure function of a
-snapshot, and the actor owns nothing but the snapshot.** A policy cannot await,
-cannot read a clock and cannot reach a network, so every decision is reproducible
-from a struct you can print into a test failure. The first question anyone asks a
-budget system is "why did it say no to me," and this is the design that can
-answer it.
+snapshot, and the actor owns nothing but the snapshot.** The signature gives a
+policy nothing to await and nothing to fetch — it is *handed* the time rather
+than reading one. Nothing stops a rogue conformance calling `Date()`; the
+convention is that it does not, and the payoff is that every decision is
+reproducible from a struct you can print into a test failure. The first question
+anyone asks a budget system is "why did it say no to me," and this is the design
+that can answer it.
 
 ```swift
 let governor = Governor(
@@ -96,8 +98,9 @@ land later, and cost money.
 
 Two honest results:
 
-- **The reserve costs 17 accepted outcomes** (9.6%) to prevent exactly one
-  incident denial in this workload. Whether that is worth it depends on what one
+- **The reserve costs 17 of the 177 accepted outcomes the unreserved policy
+  delivers** — 9.6% of that figure, 10.6% of the 160 the shipped design
+  delivers — to prevent exactly one incident denial in this workload. Whether that is worth it depends on what one
   denied incident costs you — which is the point. Make the trade explicitly.
 - **Calibration does nothing here**, because `PolicyHarness` settles every
   reservation immediately, so holds never overlap and the held amount never
